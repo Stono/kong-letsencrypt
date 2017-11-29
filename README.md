@@ -1,6 +1,8 @@
 # Kong LetsEncrypt SSL Generation
 The purpose of this repository is to generate LetsEncrypt certificates using [dehydrated](https://github.com/lukas2511/dehydrated) and then post the updated certificate to a [Kong](https://getkong.org/) api gateway.
 
+The certificate generation is done using DNS verification rather than the `.well-known` folder.  As a result you need to ensure that you have the correct priviledged on your GKE cluster in order to modify DNS records.
+
 You could quite easily fork this and [change this part](scripts/provision.sh#29) of the script to send the certificates to something other than Kong, like some shared storage your NGINX server uses, or a Kubernetes secret used on ingress termination.
 
 ## Use
