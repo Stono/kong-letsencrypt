@@ -1,0 +1,14 @@
+version: '3.2'
+
+services:
+  letsencrypt:
+    image: eu.gcr.io/your-project/your-image-name 
+    volumes:
+      - ./scripts:/app
+      - ./hooks:/usr/local/bin/dehydrated/hooks
+    environment:
+      - KONG_GATEWAY
+      - KONG_USER
+      - KONG_PASSWORD
+      - CONTACT_EMAIL 
+      - FQDN

@@ -1,0 +1,5 @@
+export KONG_GATEWAY=http://127.0.0.1:8001
+export KONG_USER=admin
+export KONG_PASSWORD=password
+export CONTACT_EMAIL=example@example.com
+export FQDN=your.domain.name.com
