@@ -1,32 +1,21 @@
 #!/bin/bash
-set -e
-BASEDIR=$(dirname "$0")
+set +e
+export BASEDIR=$(dirname "$0")
 source $BASEDIR/common.sh
 
 bold "Validating Environment..."
 echo ""
 
-enforce_arg "KONG_GATEWAY" "The full URL to the Kong gateway"
-enforce_arg "KONG_USER" "The Kong admin username"
-enforce_arg "KONG_PASSWORD" "The Kong admin password"
 enforce_arg "CONTACT_EMAIL" "The email address to register the LetsEncrypt certificate"
 enforce_arg "FQDN" "The FQDN to generate certificates for" 
 
-bold "Generating LetsEncrypt certificates for $FQDN..."
-echo ""
+$BASEDIR/generate_le.sh 
+if [ $? -ne 0 ]; then
+	bold "LetsEncrypt generation failed!  Will generate a Self Signed certificate instead..."
+	$BASEDIR/generate_self_signed.sh
+fi
 
-source config
-mkdir -p $CERTDIR
-mkdir -p $ACCOUNTDIR
-mkdir -p $CHAINCACHE
+bold "Uploading certificates to secret..."
+kubectl create secret tls --dry-run ingress-tls --key /app/data/certs/$FQDN/privkey.pem --cert /app/data/certs/$FQDN/fullchain.pem -o yaml | kubectl apply -f -
 
-dehydrated --register --accept-terms
-dehydrated -d $FQDN -c 
-
-bold "Uploading certificates to $KONG_GATEWAY..."
-echo ""
-
-curl -i -X POST $KONG_GATEWAY/certificates \
-	-F "cert=@/app/data/certs/$FQDN/fullchain.pem" \
-	-F "key=@/app/data/certs/$FQDN/privkey.pem" \
-	-F "snis=$FQDN"
+bold "All done!"

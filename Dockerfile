@@ -20,6 +20,12 @@ RUN gcloud config set --installation component_manager/disable_update_check true
     gcloud config set component_manager/disable_update_check true && \
     gcloud config set core/disable_usage_reporting true
 
+# Setup Kubernetes CLI
+ARG PLATFORM_KUBECTL_VERSION
+RUN cd /usr/local/bin && \
+    curl --silent https://storage.googleapis.com/kubernetes-release/release/v$PLATFORM_KUBECTL_VERSION/bin/linux/amd64/kubectl -o kubectl && \
+    chmod +x kubectl
+
 # Get dehydrated
 RUN cd /usr/local/bin && \
 		git clone https://github.com/lukas2511/dehydrated && \

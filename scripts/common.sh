@@ -1,6 +1,4 @@
 #!/bin/bash
-set -e
-
 TERM=xterm-256color
 
 sred=$(tput setaf 1)

@@ -2,13 +2,6 @@ version: '3.2'
 
 services:
   letsencrypt:
-    build:
-      context: .
-      dockerfile: Dockerfile
-      cache_from:
-        - eu.gcr.io/your-project/your-image-name:latest
-      args:
-        PLATFORM_GCLOUD_VERSION: "${PLATFORM_GCLOUD_VERSION}"
     volumes:
       - ~/.config:/root/.config
       - ~/.kube:/root/.kube
